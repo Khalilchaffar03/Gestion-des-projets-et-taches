@@ -1,0 +1,26 @@
+// Asslema mr nidhal lahna fichier principal mte3na eli bch ylanci server w ykhadem l application 
+
+// ayetna lil bibliotheque express bch najmou nasn3ou les apis w nlanciw server
+const express = require('express');
+
+const app = express();
+// sta3melna use express.json() bch n9raw les données eli jeyin mel body mta3 les requetes w n7otouhom fi format json
+app.use(express.json());
+
+// lahna ayetna lil fichier mta3 lcnx maa db 
+require('./config/connect');
+
+
+
+
+
+
+
+
+// Lahna bch nkhadmou l backend ala port 3000 w naffichiw msg ki yekhdem kn manhotoch listen app tekhdem w tosket bch tokaad tekhdem lezem naamloi listn
+app.listen( 
+    3000 ,
+    () => {
+    console.log('kol chy ymchi mrigl serveur ymchi jawo ahla jaw :)');
+    }
+)
