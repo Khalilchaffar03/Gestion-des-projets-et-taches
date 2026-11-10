@@ -1,6 +1,6 @@
 // page hedhi bch nasn3ou fiha model user bil bibliotheque mongoose
 
-const mongoose = rquire('mongoose');
+const mongoose = require('mongoose');
 
 
 // defenition mta3 user w les attributs mte3ou
@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
 
 // hna sna3na lmodel bil bibliotheque mongoose w samineh User
 
- const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
-// w bch nexportiwouh bch najmou nesta3mlouh fi fichier server.js
+// w bch nexportiwouh bch najmou nesta3mlouh fil controlleur
 module.exports = User;
