@@ -2,6 +2,13 @@
 
 // ayetna lil bibliotheque express bch najmou nasn3ou les apis w nlanciw server
 const express = require('express');
+require('dotenv').config();
+
+//lahna importina les routes mte3na
+const projetRoute = require('./routes/projet')
+const tacheRoute = require('./routes/tache')
+const userRoute = require('./routes/user')
+
 
 const app = express();
 // sta3melna use express.json() bch n9raw les données eli jeyin mel body mta3 les requetes w n7otouhom fi format json
@@ -10,6 +17,12 @@ app.use(express.json());
 // lahna ayetna lil fichier mta3 lcnx maa db 
 require('./config/connect');
 
+
+
+
+app.use('/projet', projetRoute)
+app.use('/tache', tacheRoute)
+app.use('/user', userRoute)
 
 
 
