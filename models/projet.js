@@ -17,7 +17,9 @@ const projetSchema = new mongoose.Schema({
     },
     statut : {
         type : String,
-        enum : ['en cours','terminé','en pause']
+        enum : ['en cours','terminé','en pause'],
+        default: 'en cours'
+
     },
     "date de creation" : {
         type : Date,

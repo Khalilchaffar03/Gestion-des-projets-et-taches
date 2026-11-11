@@ -1,19 +1,58 @@
-
 // lahna aamelna l importation mtaa model projet bch najmou nesta3mlouh
 const Projet = require('../models/projet');
-
-
+// lahna aamelna l importation mtaa model Tache bch najmou nesta3mlouh
+const Tache = require('../models/tache'); 
 
 // lahne bch nasn3ou feature creation projet
 const create = async (req, res) => {
 
-}
+    try {
+     // houni nekhdhou les données eli bathahom l user bil body mte3 request   
+     const { nom, description, proprietaire, statut } = req.body;
 
+        // houni nthabtou ili esm projet mawjoud 
+    if (!nom) { 
+        return res.status(400).json({
+            message:"nom est obligatoire" 
+        }); 
+    }
+    
+    // houni nthabtou ili utilisateur connecté w mawjoud
+    if (!req.user || !req.user.id) {
+        return res.status(401).json({
+            message: "Utilisateur non authentifié"
+        });
+    }
+    
+    // houni nasn3ou projet jdid w norbtouh bil utlisateur connecté  
+    const nouvPorjet = new Projet({
+        nom,
+        description,
+        proprietaire: req.user.id, // houni n7otou id mte3 utilisateur connecté
+        statut
+    });
+
+    await nouvPorjet.save(); // houni n7awlou projet l base de données
+    
+    // Nraj3ou réponse lel utilisateur eli 3mal l request
+    return res.staturs(201).json({
+        message: "Projet créé avec succès",
+        projet: nouvPorjet
+    });
+
+    } catch (error) { 
+        return res.status(500).json({
+            message: "Fama erreur fi creation mtaa projet",
+            error: error.message
+        });
+    }
+}
 
 // lahna bch nasn3ou feature bch njibou bih projet bil id mte3ou
 const ById = async (req, res) => {
 
-}
+} 
+
 
 // lahna bch nasn3ou feature bch njibou les projets lkol
 const list = async (req, res) => {
