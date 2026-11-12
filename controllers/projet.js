@@ -139,7 +139,6 @@ const deleteProjet = async (req, res) => {
 } 
 
 // lahna bch nasn3ou feature bch nbadel bih projet bil id mte3ou
-const update = async (req, res) => {
 // Lahna bch nbaddlou les informations mtaa projet
 const update = async (req, res) => {
     try {
@@ -183,7 +182,6 @@ const update = async (req, res) => {
         });
     }
 };
-}
 
 
 module.exports = {

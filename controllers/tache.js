@@ -31,6 +31,9 @@ const update = async (req, res) => {
 
 }
 
+const assign = async(req, res)=>{
+
+}
 
 module.exports = {
     create,
@@ -38,5 +41,6 @@ module.exports = {
     ById,
     list,
     deleteTache,
-    update
+    update,
+    assign
 }
