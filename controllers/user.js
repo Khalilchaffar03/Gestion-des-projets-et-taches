@@ -65,6 +65,7 @@ const list = async (req, res) => {
     try{
         //lahne bch nfarksou aal les utilisateurs eli role mte3hom user w njibou les données mteehom kn mdp manjibouhch
         let users = await User.find({role: 'user'}, {'mot de passe' : 0});
+        //lahna nraj3ou lista f response
         res.send(users)
     }catch(error){
         res.status(500).json({message : error.message})
@@ -76,6 +77,7 @@ const ById = async (req, res) => {
     try{
         //lahna bch nfarksou aal user bil id eli jey m request w ki nalkawh nraj3ou les données kol kn mdp le
         let user = await User.findById({_id : req.params.id }, {'mot de passe' : 0})
+        // lahna nraj3ouh f respons
         res.send(user)
     }catch(error){
         res.status(500).json({message : error.message})
@@ -83,7 +85,16 @@ const ById = async (req, res) => {
 }
 
 // lahne bch nasn3ou feature mtaa delete user
-const deleteUser = async (req, res) => {}
+const deleteUser = async (req, res) => {
+    try{
+        // lahna nfarksou aal user bil eli jey m request w nfaskhouh
+        let deletedUser = await User.findByIdAndDelete({ _id : req.params.id });
+        // lahna nraj3ouh f response une fois tfasakh
+        res.send(deletedUser)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
 
 
 // lahne bch nasn3ou feature mtaa update user
