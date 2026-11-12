@@ -58,7 +58,39 @@ const createUserAccount = async (req, res) => {
 }
 
 // lahne bch nasn3ou feature mtaa signin
-const signIn = async (req, res) => {}
+const signIn = async (req, res) => {
+    try{
+        // lahna bch nekhou login w mdp b request
+        const { login, 'mot de passe' : mdp} = req.body;
+        // lahna bch nfarkes ala user f base b login 
+        const user = await User.findOne({ login : login})
+        // lahna bch nkos fonction w nraja3 msg kn malkach l user f base
+        if(!user){
+            return res.send('email wla mdp ghaltin');
+        }
+        //lahna bch ncomparer mdt eli je m request b mdp f base w betbi3a decryptage bil bcrypt
+        const valid = bcrypt.compareSync(mdp, user['mot de passe']);
+        // lahna bch nkos fonction w nraja3 msg kn l9a lmdp invalide
+        if(!valid){
+            return res.send('mdp ghalet');
+        }
+        // lahne nch nhoto lma3loumet eli nest7a9ouhom f west token
+        let payload = {
+            _id : user._id,
+            nom : user.nom,
+            login : user.login,
+            role : user.role,
+            date : user['date de creation']
+        }
+
+        //lahne bch nesta3mlou jwt bch nasn3ou token bil payload w secret key eli mawjoud f .env bch nverifi bih est ce que token tesna3 f app mte3i wla le
+        let token = jwt.sign( payload, process.env.SECRET_KEY)
+        // nraj3ou token f response
+        res.send( {myToken : token})
+    }catch(error){
+        res.status(500).json({ message: error.message });
+    }
+}
 
 // lahne bch nasn3ou feature mtaa list users 
 const list = async (req, res) => {
