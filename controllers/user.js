@@ -98,7 +98,26 @@ const deleteUser = async (req, res) => {
 
 
 // lahne bch nasn3ou feature mtaa update user
-const update = async (req, res) => {}
+const update = async (req, res) => {
+    try{
+        // lahna bch nekhdhou el id mil params mta3 request
+        let id = req.params.id;
+        // lahana bch nekhdhou données lkol mil body mta3 request
+        let data = req.body;
+        // lahna bch nchoufo kn baath mdp wla le kn baath ncryptiwh 
+        if(data['mot de passe']){
+            data['mot de passe'] = bcrypt.hashSync(data['mot de passe'], 10);
+        }
+        // lahna bch naamlou l update findByIdand Update mta3 mongo
+        let updatedUser = await User.findByIdAndUpdate({ _id : id}, data);
+        
+        // lahna bch nabaathou les données à jour
+        res.send(updatedUser);
+
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
 
 
 module.exports = {
