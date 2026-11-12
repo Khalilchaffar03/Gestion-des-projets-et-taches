@@ -9,6 +9,8 @@ const projetRoute = require('./routes/projet')
 const tacheRoute = require('./routes/tache')
 const userRoute = require('./routes/user')
 
+//lahna bch naaytou lil function mta3 creation manager w naamloulha execution f lancement mta3 l app
+const{createManagerAccount} = require('./controllers/user')
 
 const app = express();
 // sta3melna use express.json() bch n9raw les données eli jeyin mel body mta3 les requetes w n7otouhom fi format json
@@ -35,5 +37,6 @@ app.listen(
     3000 ,
     () => {
     console.log('kol chy ymchi mrigl serveur ymchi jawo ahla jaw :)');
+    createManagerAccount()
     }
 )

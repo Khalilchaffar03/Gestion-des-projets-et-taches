@@ -10,7 +10,31 @@ const jwt = require('jsonwebtoken');
 
 
 // lahne bch nasn3ou feature mtaa creation manager 
-const createManagerAccount = async () => {}
+const createManagerAccount = async () => {
+    try{
+        // lahna nchouf f collection user est ce que mawjoud compte b role manager ou non w traj3elna table find function
+        let existManager = await User.find({role : 'manager'})
+        // lahna bch ntestiw table vide wla le kn taille mte3ha 0 ray vide w ma3ana hatta compte role mte3o manager
+        // wkthha nmchi nasn3ou
+        if(existManager.length == 0){
+            let data = {
+                nom :"manager manager",
+                login : process.env.LOGIN,
+                "mot de passe": process.env.PASS,
+                role : 'manager'
+            }
+            let admin = new User(data);
+            // Lahna 9bal mansajlou f base ncryptih bil bcrypt w naatyh salt 10 eli howa 3ibara round atito 10 itérations
+            admin['mot de passe'] = bcrypt.hashSync(data['mot de passe'],10);
+            await admin.save()
+            console.log('manager tesna3 f base oumouro mrigla')
+        }else{
+            console.log('compte manager deja mawjoud f base')
+        }
+    }catch(err){
+        console.log('fma mochkla f creation mt3 compte')
+    }
+}
 
 
 // lahne bch nasn3ou feature mtaa creation user
