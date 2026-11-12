@@ -109,14 +109,33 @@ const list = async (req, res) => {
 
 
 
-
-
-
 // lahna bch nasn3ou feature bch nfaskhou bih projet bil id mte3ou
 const deleteProjet = async (req, res) => {
+    try { 
+        // nakthou l'id mtaa projet mel URL mte3 request
+        const id = req.params.id; 
 
-}
+        // houni bech nlawjou ala projet w nfaskhouh 
+        const projet = await Projet.findByIdAndDelete(id);
 
+        // Ken projet moch mawjoud 
+        if (!projet) {
+            return res.status(404).json({
+                message: "Projet non trouvé"
+            });
+        } 
+
+        return res.status(200).json({
+            message:"Pojet suprimé avec succés",
+            projet 
+    }); 
+    
+ }  catch (error) { 
+        return res.status(500).json({
+            message: "Fama erreur fi suppression mtaa projet",
+            error: error.message
+    });
+};
 
 // lahna bch nasn3ou feature bch nbadel bih projet bil id mte3ou
 const update = async (req, res) => {
