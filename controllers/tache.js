@@ -1,6 +1,6 @@
 // lahna aamelna l importation mtaa model tache bch najmou nesta3mlouh
 const Tache = require('../models/tache');
-
+const Projet = require('../models/projet');
 
 // lahne bch nasn3ou feature creation tache
 const create = async (req, res) => {
@@ -93,10 +93,10 @@ const update = async (req, res) => {
 
 }
 
-const Assign = async (req, res) => { 
 
+const assign = async (req, res) => {
 
-}
+};
 
 
 module.exports = {
@@ -106,5 +106,5 @@ module.exports = {
     list,
     deleteTache,
     update,
-    Assign
-}
+    assign
+}   
