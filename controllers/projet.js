@@ -135,11 +135,54 @@ const deleteProjet = async (req, res) => {
             message: "Fama erreur fi suppression mtaa projet",
             error: error.message
     });
-};
+} 
+} 
 
 // lahna bch nasn3ou feature bch nbadel bih projet bil id mte3ou
 const update = async (req, res) => {
+// Lahna bch nbaddlou les informations mtaa projet
+const update = async (req, res) => {
+    try {
+        // Nakhthou l'id mtaa projet mel URL
+        const id = req.params.id;
 
+        // Nakhthou les nouvelles données mel body
+        const { nom, description, statut } = req.body;
+
+        // Nlawjou 3al projet w nbaddlou les informations mte3ou
+        const projet = await Projet.findByIdAndUpdate(
+            id,
+            {
+                nom,
+                description,
+                statut
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        // Ken projet mech mawjoud
+        if (!projet) {
+            return res.status(404).json({
+                message: "Projet introuvable"
+            });
+        }
+
+        // Nraj3ou projet ba3d ma tbaddel
+        return res.status(200).json({
+            message: "Projet modifié avec succès",
+            projet
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Erreur lors de la modification du projet",
+            error: error.message
+        });
+    }
+};
 }
 
 
@@ -149,4 +192,4 @@ module.exports = {
     list,
     deleteProjet,
     update
-}
+} 
