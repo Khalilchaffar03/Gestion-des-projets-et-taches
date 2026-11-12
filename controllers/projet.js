@@ -81,11 +81,31 @@ const ById = async (req, res) => {
 } 
 
 
-
 // lahna bch nasn3ou feature bch njibou les projets lkol
 const list = async (req, res) => {
+    try {
+        //njibou les projets lkol mil monogodb
+        const projets = await Projet.find();
+         
+        // Kenma fama hata projet 
+        if (projets.length === 0 ) {
+            return res.status(404).json({
+                message: "Aucun projet trouve"
+            });
+        }
 
-}
+        return res.status(200).json({
+            message: "Liste des projets réxupérée avec succès",
+            projets
+        });
+
+    } catch (error) { 
+        return res.status(500).json({
+            message: "Fama erreur fi recherche mtaa projets",
+            error: error.message
+        });
+    }
+};
 
 
 
