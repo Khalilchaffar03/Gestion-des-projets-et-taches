@@ -19,7 +19,7 @@ const create = async (req, res) => {
     
     // houni nthabtou ili utilisateur connecté w mawjoud
     if (!req.user || !req.user.id) {
-        return res.status(401).json({
+        return res.status(  401).json({
             message: "Utilisateur non authentifié"
         });
     }
@@ -35,7 +35,7 @@ const create = async (req, res) => {
     await nouvPorjet.save(); // houni n7awlou projet l base de données
     
     // Nraj3ou réponse lel utilisateur eli 3mal l request
-    return res.staturs(201).json({
+    return res.status(201).json({
         message: "Projet créé avec succès",
         projet: nouvPorjet
     });
@@ -50,14 +50,47 @@ const create = async (req, res) => {
 
 // lahna bch nasn3ou feature bch njibou bih projet bil id mte3ou
 const ById = async (req, res) => {
+    try { 
+        // nkhthou l'id mtaa projet mel URL mte3 request
+        const id = req.params.id;
+
+        // nkawjou 3al projet fil MongoDB bch njibouh bil id mte3ou
+        const projet = await Projet.findById(id); 
+
+        // ken projet mech mawjoud, nraj3ou message mtaa erreur
+        if (!projet) {
+            return res.status(404).json({
+                message: "Projet non trouvé"
+            });
+
+        }
+
+        // ken l9ineh nrajouh lel utlisateur 
+        return res.status(200).json({
+            message: "Projet trouve",
+            projet: projet
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Fama erreur fi recherche mtaa projet",
+            error: error.message
+        });
+    }
 
 } 
+
 
 
 // lahna bch nasn3ou feature bch njibou les projets lkol
 const list = async (req, res) => {
 
 }
+
+
+
+
+
 
 // lahna bch nasn3ou feature bch nfaskhou bih projet bil id mte3ou
 const deleteProjet = async (req, res) => {
