@@ -63,7 +63,8 @@ const signIn = async (req, res) => {}
 // lahne bch nasn3ou feature mtaa list users 
 const list = async (req, res) => {
     try{
-        let users = await User.find({role: 'user'});
+        //lahne bch nfarksou aal les utilisateurs eli role mte3hom user w njibou les données mteehom kn mdp manjibouhch
+        let users = await User.find({role: 'user'}, {'mot de passe' : 0});
         res.send(users)
     }catch(error){
         res.status(500).json({message : error.message})
@@ -71,7 +72,15 @@ const list = async (req, res) => {
 }
 
 // lahne bch nasn3ou feature mtaa getuser by id
-const ById = async (req, res) => {}
+const ById = async (req, res) => {
+    try{
+        //lahna bch nfarksou aal user bil id eli jey m request w ki nalkawh nraj3ou les données kol kn mdp le
+        let user = await User.findById({_id : req.params.id }, {'mot de passe' : 0})
+        res.send(user)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
 
 // lahne bch nasn3ou feature mtaa delete user
 const deleteUser = async (req, res) => {}
