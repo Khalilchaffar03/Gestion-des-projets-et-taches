@@ -61,7 +61,14 @@ const createUserAccount = async (req, res) => {
 const signIn = async (req, res) => {}
 
 // lahne bch nasn3ou feature mtaa list users 
-const list = async (req, res) => {}
+const list = async (req, res) => {
+    try{
+        let users = await User.find({role: 'user'});
+        res.send(users)
+    }catch(error){
+        res.status(500).json({message : error.message})
+    }
+}
 
 // lahne bch nasn3ou feature mtaa getuser by id
 const ById = async (req, res) => {}
