@@ -38,7 +38,24 @@ const createManagerAccount = async () => {
 
 
 // lahne bch nasn3ou feature mtaa creation user
-const createUserAccount = async (req, res) => {}
+const createUserAccount = async (req, res) => {
+    try{
+        // lahna bch hoto les données eli jeyin mil body mta3 request f west vaiable data 
+        let data = req.body;
+        // baaed bch nasn3ou user b les données hedhokm
+        let user = new User(data)
+        //baaed naamlou l cryptage mta3 password
+        user['mot de passe'] = bcrypt.hashSync(data['mot de passe'],10);
+        // nhoto role mte3o eli howa user
+        user.role = 'user';
+        // lahna bch nsajlou l user f base bch yetzadena f base
+        let saveUser = await user.save();
+        // bch nraj3ou msg fih user eli tzad
+        res.send(saveUser)
+    }catch(error){
+        res.status(500).json({ message: error.message });
+    }
+}
 
 // lahne bch nasn3ou feature mtaa signin
 const signIn = async (req, res) => {}
