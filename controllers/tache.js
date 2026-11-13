@@ -146,7 +146,42 @@ const ByprojetId = async (req, res) => {
 
 // lahna bch nasn3ou feature njibou biha tache bil id mteeha 
 const ById = async (req, res) => {
+     try {
+        // Nakhthou l'id mtaa tache mel URL
+        const id = req.params.id;
 
+        // Nlawjou 3al tache fil MongoDB
+        const tache = await Tache.findById(id);
+
+        // Ken tache mech mawjouda
+        if (!tache) {
+            return res.status(404).json({
+                message: "Tâche introuvable"
+            });
+        }
+
+        // Nthabtou eli l'utilisateur 3andou el droit ychouf el tache
+        if (!(await peutAcceder(tache, req.user))) {
+            return res.status(403).json({
+                message: "Vous n'avez pas le droit d'accéder à cette tâche"
+            });
+        }
+
+        return res.status(200).json({
+            message: "Tâche trouvée avec succès",
+            tache
+        });
+
+    } catch (error) {
+        // ken l'id ghalet (mech format mtaa mongodb)
+        if (error.name === 'CastError') {
+            return res.status(400).json({ message: "Id invalide" });
+        }
+        return res.status(500).json({
+            message: "Erreur lors de la recherche de la tâche",
+            error: error.message
+        });
+    }
 
 }
 
