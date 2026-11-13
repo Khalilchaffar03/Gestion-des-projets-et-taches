@@ -2,6 +2,12 @@
 const Projet = require("../models/projet");
 // lahna aamelna l importation mtaa model Tache bch najmou nesta3mlouh
 const Tache = require("../models/tache");
+// fonction tchouf ken el user howa sa7b el projet wala manager
+const estProprietaireOuManager = (projet, user) => {
+  return (
+    user.role === "manager" || String(projet.proprietaire) === String(user._id)
+  );
+};
 
 // lahne bch nasn3ou feature creation projet
 const create = async (req, res) => {
@@ -62,6 +68,13 @@ const ById = async (req, res) => {
       });
     }
 
+    // el user 3adi ychouf ken projet mte3ou, el manager ychouf el kol
+    if (!estProprietaireOuManager(projet, req.user)) {
+      return res.status(403).json({
+        message: "Ce projet ne vous appartient pas",
+      });
+    }
+
     // ken l9ineh nrajouh lel utlisateur
     return res.status(200).json({
       message: "Projet trouve",
@@ -94,7 +107,7 @@ const list = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "Liste des projets réxupérée avec succès",
+      message: "Liste des projets récupérée avec succès",
       projets,
     });
   } catch (error) {
