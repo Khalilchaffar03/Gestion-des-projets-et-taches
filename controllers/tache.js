@@ -3,6 +3,25 @@ const Tache = require('../models/tache');
 const Projet = require('../models/projet');
 const User = require('../models/user');
 
+// fonction tthabbat ken el user ynajem yousel lel tache
+const peutAcceder = async (tache, user) => {
+    // el manager ynajem yousel l kol chy
+    if (user.role === 'manager') return true;
+
+    // Ken el user howa eli t3ayen lel tache (utilisateur assigné)
+    if (tache.utilisateurAssocie && String(tache.utilisateurAssocie) === String(user._id)) {
+        return true;
+    }
+
+    // Ken el user howa sa7b el projet
+    const projet = await Projet.findById(tache.projetAssocie);
+    if (projet && String(projet.proprietaire) === String(user._id)) {
+        return true;
+    }
+
+    return false;
+};
+
 // lahne bch nasn3ou feature creation tache
 const create = async (req, res) => {
     try {
@@ -127,6 +146,7 @@ const ByprojetId = async (req, res) => {
 
 // lahna bch nasn3ou feature njibou biha tache bil id mteeha 
 const ById = async (req, res) => {
+
 
 }
 
