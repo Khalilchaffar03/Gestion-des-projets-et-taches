@@ -78,8 +78,13 @@ const ById = async (req, res) => {
 // lahna bch nasn3ou feature bch njibou les projets lkol
 const list = async (req, res) => {
   try {
-    //njibou les projets lkol mil monogodb
-    const projets = await Projet.find();
+    // el user 3adi ychouf projets mte3ou bark, el manager ychouf el kol
+    const filtre = {};
+    if (req.user.role !== "manager") {
+      filtre.proprietaire = req.user._id;
+    }
+
+    const projets = await Projet.find(filtre);
 
     // Kenma fama hata projet
     if (projets.length === 0) {
