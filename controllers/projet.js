@@ -97,15 +97,20 @@ const list = async (req, res) => {
       filtre.proprietaire = req.user._id;
     }
 
-    const projets = await Projet.find(filtre);
-
-    // Kenma fama hata projet
-    if (projets.length === 0) {
-      return res.status(404).json({
-        message: "Aucun projet trouve",
-      });
+    // filtre bel statut
+    if (req.query.statut) {
+      filtre.statut = req.query.statut;
     }
 
+    // recherche bel nom
+    if (req.query.search) {
+      filtre.nom = { $regex: req.query.search, $options: "i" };
+    }
+
+    // tri (par defaut el jdid lawel)
+    const projets = await Projet.find(filtre).sort(req.query.sort || "-_id");
+
+    // ken ma fama hata projet, nraj3ou liste fer8a (mouch erreur)
     return res.status(200).json({
       message: "Liste des projets récupérée avec succès",
       projets,
