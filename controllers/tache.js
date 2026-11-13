@@ -187,6 +187,91 @@ const ById = async (req, res) => {
 
 // lahna bch nasn3ou feature njibou biha les taches kol
 const list = async (req, res) => {
+  try {
+        // Njibou les taches lkol mel MongoDB w n7ottouhom fi variable taches
+        let taches = await Tache.find();
+
+        // Nthabtou men role mta3 l'utilisateur connecté
+        // Ken howa manager, ynajem ychouf les taches lkol
+        // Ama ken user 3adi, lezem n'affichiw ken les taches eli 3andou el 7a9 ychoufhom
+        if (req.user.role !== 'manager') {
+
+            // Na3mlou tableau feragh bch n7ottou fih les taches eli user ynajem youselhom
+            let resultat = [];
+
+            // N3addiw 3la kol tache wa7da wa7da
+            for (let tache of taches) {
+
+                // Nesta3mlou fonction peutAcceder bch nthabtou ken l'utilisateur
+                // 3andou el 7a9 ychouf el tache hedhi wala le
+                if (await peutAcceder(tache, req.user)) {
+
+                    // Ken fonction traja3 true, nzidou el tache lel tableau resultat
+                    resultat.push(tache);
+                }
+            }
+
+            // N3awdhou liste taches bel resultat eli fih ken les taches autorisées
+            taches = resultat;
+        }
+
+        // Nthabtou ken l'utilisateur 3mal recherche bel statut
+        if (req.query.statut) {
+
+            // N5alliou ken les taches eli statut mte3hom ysewi el statut eli talabou l'utilisateur
+            taches = taches.filter(t => t.statut === req.query.statut);
+        }
+
+        // Nthabtou ken l'utilisateur 7at kelma bech yalwej 3liha fi titre mta3 tache
+        if (req.query.search) {
+
+            // filter traja3 tableau jdida fih ken les taches eli titre mte3hom fih el kelma matlouba
+            // toLowerCase t5alli el recherche ma tfarra9ch bin majuscule w minuscule
+            // includes tthabet ken el kelma mawjouda fi titre wala le
+            taches = taches.filter(t =>
+                t.titre.toLowerCase().includes(req.query.search.toLowerCase())
+            );
+        }
+
+        // Nthabtou ken l'utilisateur 7ab yratteb les taches 7asb deadline
+        if (req.query.sort === 'deadline') {
+
+            // sort trateb les taches 7asb deadline men el a9reb lel ab3ed
+            taches.sort((a, b) => {
+
+                // Ken el tache loula ma 3andhech deadline, n7ottouha lel e5er
+                if (!a.deadline) return 1;
+
+                // Ken el tache thenya ma 3andhech deadline, zeda n7ottouha lel e5er
+                if (!b.deadline) return -1;
+
+                // N9arnou bin les deux deadlines bch na3rfou anehom a9reb
+                return new Date(a.deadline) - new Date(b.deadline);
+            });
+        }
+
+        // Nthabtou ken l'utilisateur 7ab yratteb les taches 7asb titre
+        if (req.query.sort === 'titre') {
+
+            // localeCompare trateb les titres par ordre alphabetique
+            taches.sort((a, b) => a.titre.localeCompare(b.titre));
+        }
+
+        // Ken kol chy mche bel behi, Nraj3ou resultat lel utilisateur b status 200
+        // taches tnajem tkoun fiha barcha taches wala tableau feragh
+        return res.status(200).json({
+            message: "Liste des tâches récupérée avec succès",
+            taches
+        });
+
+    } catch (error) {
+
+        // Ken sar erreur pendant l'execution, nraj3ou status 500 m3a message mta3 erreur
+        return res.status(500).json({
+            message: "Erreur lors de la récupération des tâches",
+            error: error.message
+        });
+    }
 
 }
 
