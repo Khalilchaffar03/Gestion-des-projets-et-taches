@@ -359,9 +359,49 @@ const update = async (req, res) => {
 
 }
 
-
+// lahna bch n3tiw tache lil user (assignation)
 const assign = async (req, res) => {
+    try {
+        // nakhdhou id mta3 el user eli bch n3tiwah el tache 
+        const { userId } = req.body;
 
+        // ken el manager ma ab3athch userId, nraj3ou 400 (erreur fil données)
+        if (!userId) {
+            return res.status(400).json(
+                { message: "userId est obligatoire" });
+        }
+
+        // nlawjou 3al tache eli bch nعtiwha
+        const tache = await Tache.findById(req.params.id);
+        if (!tache) {
+            return res.status(404).json(
+                { message: "Tâche introuvable" });
+        }
+
+        // nthabtou eli el user mawjoud fil base 
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json(
+                { message: "Utilisateur introuvable" });
+        }
+
+        // naffectiw el tache lel user: nsajlou el id mte3ou fil champ utilisateurAssocie
+        tache.utilisateurAssocie = user._id;
+        await tache.save();
+
+        // nraj3ou el tache ba3d el affectation
+        return res.status(200).json({
+            message: "Tâche affectée avec succès",
+            tache
+        });
+
+    } catch (error) {
+        // ken sar ay erreur (id mech s7i7, problème fil base...)
+        return res.status(500).json({
+            message: "Erreur lors de l'affectation de la tâche",
+            error: error.message
+        });
+    }
 };
 
 
