@@ -121,22 +121,28 @@ const list = async (req, res) => {
 // lahna bch nasn3ou feature bch nfaskhou bih projet bil id mte3ou
 const deleteProjet = async (req, res) => {
   try {
-    // nakthou l'id mtaa projet mel URL mte3 request
-    const id = req.params.id;
+    const projet = await Projet.findById(req.params.id);
 
-    // houni bech nlawjou ala projet w nfaskhouh
-    const projet = await Projet.findByIdAndDelete(id);
-
-    // Ken projet moch mawjoud
+    // ken projet mech mawjoud
     if (!projet) {
       return res.status(404).json({
         message: "Projet non trouvé",
       });
     }
 
+    // ken el user mouch sa7b el projet w mouch manager, mamnou3
+    if (!estProprietaireOuManager(projet, req.user)) {
+      return res.status(403).json({
+        message: "Ce projet ne vous appartient pas",
+      });
+    }
+
+    // nfaskhou el taches mta3 el projet 9bal (bech ma yبqaw taches bidoun projet)
+    await Tache.deleteMany({ projetAssocie: projet._id });
+    await Projet.findByIdAndDelete(projet._id);
+
     return res.status(200).json({
-      message: "Pojet suprimé avec succés",
-      projet,
+      message: "Projet supprimé avec succès",
     });
   } catch (error) {
     return res.status(500).json({
@@ -149,7 +155,7 @@ const deleteProjet = async (req, res) => {
 // lahna bch nasn3ou feature bch nbadel bih projet bil id mte3ou
 // Lahna bch nbaddlou les informations mtaa projet
 const update = async (req, res) => {
-   try {
+  try {
     // nakhthou les nouvelles données mel body
     const { nom, description, statut } = req.body;
 
@@ -181,7 +187,6 @@ const update = async (req, res) => {
       message: "Projet modifié avec succès",
       projet,
     });
-    
   } catch (error) {
     return res.status(500).json({
       message: "Erreur lors de la modification du projet",
