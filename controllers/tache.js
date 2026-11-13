@@ -311,6 +311,51 @@ const deleteTache = async (req, res) => {
 
 // lahna bch nbadlou fi tache bil id mteeha 
 const update = async (req, res) => {
+    try {
+        // nakhdhou el données eli jew mel body (par exemple: { "statut": "doing" })
+        // utilisateurAssocie mouch houni: el affectation lel manager bark fi route assign
+        const { titre, description, statut, deadline } = req.body;
+
+        // nlawjou 3al tache fil base bil id eli fil URL
+        const tache = await Tache.findById(req.params.id);
+
+        // ken tache mech mawjouda, nraj3ou 404
+        if (!tache) {
+            return res.status(404).json(
+                { message: "Tâche introuvable" });
+        }
+
+        // nthabtou eli el user 3andou el droit ybaddel el tache
+        // (manager, wala sa7b el projet, wala el manager aamel lha assign lih)
+        // ken la, nraj3ou 403 
+        if (!(await peutAcceder(tache, req.user))) {
+            return res.status(403).json(
+                { message: "Vous n'avez pas le droit de modifier cette tâche" });
+        }
+
+        // nbadlou ken les champs eli jewna fil body, w eli ma jewch yebqaw kif ma houma
+        if (titre) tache.titre = titre;
+        if (description) tache.description = description;
+        if (statut) tache.statut = statut;
+        if (deadline) tache.deadline = deadline;
+
+        // save ysir automatiquement mel statut (lezem to do wala doing wala done)
+        // ken statut ghalet, ytal3 erreur w yet7at fil catch
+        await tache.save();
+
+        // nraj3ou el tache ba3d ma tbaddlet
+        return res.status(200).json({
+            message: "Tâche modifiée avec succès",
+            tache
+        });
+
+    } catch (error) {
+        // ken sar ay erreur (statut ghalet, id mech s7i7, problème fil base...)
+        return res.status(500).json({
+            message: "Erreur lors de la modification de la tâche",
+            error: error.message
+        });
+    }
 
 }
 
