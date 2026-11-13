@@ -277,7 +277,36 @@ const list = async (req, res) => {
 
 // lahna bch nfaskhou tache bil id 
 const deleteTache = async (req, res) => {
+   try {
+        // nakhdhou l'id mtaa tache mel URL (exemple: /tache/delete/123)
+        // nlawjou 3al tache fil base, ken ma l9ineehech ywalli tache = null
+        const tache = await Tache.findById(req.params.id);
 
+        // ken tache mech mawjouda, nraj3ou 404 w nwa99fou houni
+        if (!tache) {
+            return res.status(404).json({ message: "Tâche introuvable" });
+        }
+
+        // nthabtou eli el user 3andou el droit yfaskh el tache
+        // (ya3ni howa manager, wala sa7b el projet, wala el tache assign lih)
+        // ken ma 3andouch el droit, nraj3ou 403 
+        if (!(await peutAcceder(tache, req.user))) {
+            return res.status(403).json({ message: "Vous n'avez pas le droit de supprimer cette tâche" });
+        }
+
+        // kol chay s7i7, donc nfaskhou el tache mel base
+        await Tache.findByIdAndDelete(req.params.id);
+
+        // nraj3ou 200 bech n3arfou eli el fas5 sar 
+        return res.status(200).json({ message: "Tâche supprimée avec succès" });
+
+    } catch (error) {
+        // ken sar ay erreur ghalta (par exemple id mech format mongodb, wala problème fil base)
+        return res.status(500).json({
+            message: "Erreur lors de la suppression de la tâche",
+            error: error.message
+        });
+    }
 }   
 
 // lahna bch nbadlou fi tache bil id mteeha 
